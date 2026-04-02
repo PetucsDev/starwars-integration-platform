@@ -2,6 +2,8 @@
 
 REST API built with **Java 21 + Spring Boot 3.3** that integrates with the public [Star Wars API (swapi.tech)](https://www.swapi.tech/documentation).
 
+🚀 **Live demo (Swagger UI):** https://starwars-integration-platform.onrender.com/swagger-ui.html
+
 ## Features
 
 - **JWT Authentication** — register and login to obtain a Bearer token
@@ -369,7 +371,9 @@ curl http://localhost:8080/actuator/info
 
 ## Swagger UI
 
-Open **http://localhost:8080/swagger-ui.html** in your browser.
+**Deployed:** https://starwars-integration-platform.onrender.com/swagger-ui.html
+
+**Local:** http://localhost:8080/swagger-ui.html
 
 1. Click **Authorize** (the padlock icon)
 2. Paste your JWT token (without the `Bearer ` prefix)

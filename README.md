@@ -127,42 +127,132 @@ curl http://localhost:8080/api/people/1 \
 
 ## Endpoints
 
-All endpoints except `/api/auth/**`, `/swagger-ui/**`, `/v3/api-docs/**` and `/h2-console/**` require a valid JWT token.
+All endpoints except `/api/auth/**`, `/actuator/health`, `/actuator/info`, `/swagger-ui/**`, `/v3/api-docs/**` and `/h2-console/**` require a valid JWT token in the `Authorization` header.
+
+```bash
+# Save your token after login/register
+export TOKEN="eyJhbGciOiJIUzI1NiJ9..."
+```
+
+---
 
 ### Authentication
 
-| Method | Path | Description |
-|--------|------|-------------|
-| `POST` | `/api/auth/register` | Register a new user |
-| `POST` | `/api/auth/login` | Login and get a JWT token |
+#### Register
+```bash
+curl -X POST http://localhost:8080/api/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{"username":"jedi","password":"force123","email":"jedi@galaxy.com"}'
+```
+
+#### Login
+```bash
+curl -X POST http://localhost:8080/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"username":"jedi","password":"force123"}'
+```
+
+Both return:
+```json
+{ "token": "eyJhbGci...", "expiresAt": "...", "username": "jedi" }
+```
+
+---
 
 ### People
 
-| Method | Path | Description |
-|--------|------|-------------|
-| `GET` | `/api/people` | Paginated list (`?page=1&limit=10&name=luke`) |
-| `GET` | `/api/people/{id}` | Full details for a character by ID |
+#### List (paginated)
+```bash
+curl "http://localhost:8080/api/people?page=1&limit=10" \
+  -H "Authorization: Bearer $TOKEN"
+```
+
+#### List (filtered by name)
+```bash
+curl "http://localhost:8080/api/people?name=luke" \
+  -H "Authorization: Bearer $TOKEN"
+```
+
+#### Get by ID
+```bash
+curl http://localhost:8080/api/people/1 \
+  -H "Authorization: Bearer $TOKEN"
+```
+
+---
 
 ### Films
 
-| Method | Path | Description |
-|--------|------|-------------|
-| `GET` | `/api/films` | Paginated list (`?page=1&limit=6&title=hope`) |
-| `GET` | `/api/films/{id}` | Full details for a film by ID |
+#### List (paginated)
+```bash
+curl "http://localhost:8080/api/films?page=1&limit=6" \
+  -H "Authorization: Bearer $TOKEN"
+```
+
+#### List (filtered by title)
+```bash
+curl "http://localhost:8080/api/films?title=hope" \
+  -H "Authorization: Bearer $TOKEN"
+```
+
+#### Get by ID
+```bash
+curl http://localhost:8080/api/films/1 \
+  -H "Authorization: Bearer $TOKEN"
+```
+
+---
 
 ### Starships
 
-| Method | Path | Description |
-|--------|------|-------------|
-| `GET` | `/api/starships` | Paginated list (`?page=1&limit=10&name=falcon`) |
-| `GET` | `/api/starships/{id}` | Full details for a starship by ID |
+#### List (paginated)
+```bash
+curl "http://localhost:8080/api/starships?page=1&limit=10" \
+  -H "Authorization: Bearer $TOKEN"
+```
+
+#### List (filtered by name)
+```bash
+curl "http://localhost:8080/api/starships?name=falcon" \
+  -H "Authorization: Bearer $TOKEN"
+```
+
+#### Get by ID
+```bash
+curl http://localhost:8080/api/starships/9 \
+  -H "Authorization: Bearer $TOKEN"
+```
+
+---
 
 ### Vehicles
 
-| Method | Path | Description |
-|--------|------|-------------|
-| `GET` | `/api/vehicles` | Paginated list (`?page=1&limit=10&name=speeder`) |
-| `GET` | `/api/vehicles/{id}` | Full details for a vehicle by ID |
+#### List (paginated)
+```bash
+curl "http://localhost:8080/api/vehicles?page=1&limit=10" \
+  -H "Authorization: Bearer $TOKEN"
+```
+
+#### List (filtered by name)
+```bash
+curl "http://localhost:8080/api/vehicles?name=speeder" \
+  -H "Authorization: Bearer $TOKEN"
+```
+
+#### Get by ID
+```bash
+curl http://localhost:8080/api/vehicles/4 \
+  -H "Authorization: Bearer $TOKEN"
+```
+
+---
+
+### Health & Info (no token required)
+
+```bash
+curl http://localhost:8080/actuator/health
+curl http://localhost:8080/actuator/info
+```
 
 ---
 

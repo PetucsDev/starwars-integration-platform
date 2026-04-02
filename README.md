@@ -78,9 +78,23 @@ BUILD SUCCESS
 
 ---
 
-## API Quick Start
+## How to test the API step by step
 
-### 1. Register a user
+> You can use **curl** (shown below), **Postman**, or the built-in **Swagger UI** at `http://localhost:8080/swagger-ui.html`.
+
+---
+
+### Step 1 — Start the app
+
+```bash
+mvn spring-boot:run
+```
+
+Wait until you see `Started StarWarsApplication` in the logs.
+
+---
+
+### Step 2 — Register a user
 
 ```bash
 curl -X POST http://localhost:8080/api/auth/register \
@@ -92,34 +106,124 @@ Response:
 ```json
 {
   "token": "eyJhbGciOiJIUzI1NiJ9...",
-  "expiresAt": "2026-01-01T12:00:00.000+00:00",
+  "expiresAt": "2026-01-01T13:00:00.000+00:00",
   "username": "jedi"
 }
 ```
 
-### 2. Login (if already registered)
+---
+
+### Step 3 — Save the token
+
+Copy the `token` value from the response and save it:
 
 ```bash
-curl -X POST http://localhost:8080/api/auth/login \
-  -H "Content-Type: application/json" \
-  -d '{"username":"jedi","password":"force123"}'
-```
-
-### 3. Use the token in all other requests
-
-```bash
+# Linux / Mac
 export TOKEN="eyJhbGciOiJIUzI1NiJ9..."
 
-# List people (paginated)
-curl http://localhost:8080/api/people?page=1&limit=10 \
+# Windows PowerShell
+$TOKEN="eyJhbGciOiJIUzI1NiJ9..."
+```
+
+> If the token expires (1 hour), repeat Step 2 with `POST /api/auth/login` using the same credentials.
+
+---
+
+### Step 4 — Call the protected endpoints
+
+Use `-H "Authorization: Bearer $TOKEN"` on every request (or `Bearer $TOKEN` in PowerShell).
+
+#### People
+
+```bash
+# List (page 1, 10 per page)
+curl "http://localhost:8080/api/people?page=1&limit=10" \
   -H "Authorization: Bearer $TOKEN"
 
-# Filter by name
+# Search by name
 curl "http://localhost:8080/api/people?name=luke" \
   -H "Authorization: Bearer $TOKEN"
 
-# Get person by ID
-curl http://localhost:8080/api/people/1 \
+# Get by ID
+curl "http://localhost:8080/api/people/1" \
+  -H "Authorization: Bearer $TOKEN"
+```
+
+#### Films
+
+```bash
+# List
+curl "http://localhost:8080/api/films?page=1&limit=6" \
+  -H "Authorization: Bearer $TOKEN"
+
+# Search by title
+curl "http://localhost:8080/api/films?title=hope" \
+  -H "Authorization: Bearer $TOKEN"
+
+# Get by ID
+curl "http://localhost:8080/api/films/1" \
+  -H "Authorization: Bearer $TOKEN"
+```
+
+#### Starships
+
+```bash
+# List
+curl "http://localhost:8080/api/starships?page=1&limit=10" \
+  -H "Authorization: Bearer $TOKEN"
+
+# Search by name
+curl "http://localhost:8080/api/starships?name=falcon" \
+  -H "Authorization: Bearer $TOKEN"
+
+# Get by ID
+curl "http://localhost:8080/api/starships/9" \
+  -H "Authorization: Bearer $TOKEN"
+```
+
+#### Vehicles
+
+```bash
+# List
+curl "http://localhost:8080/api/vehicles?page=1&limit=10" \
+  -H "Authorization: Bearer $TOKEN"
+
+# Search by name
+curl "http://localhost:8080/api/vehicles?name=speeder" \
+  -H "Authorization: Bearer $TOKEN"
+
+# Get by ID
+curl "http://localhost:8080/api/vehicles/4" \
+  -H "Authorization: Bearer $TOKEN"
+```
+
+---
+
+### Step 5 — Verify public endpoints (no token needed)
+
+```bash
+curl http://localhost:8080/actuator/health
+curl http://localhost:8080/actuator/info
+```
+
+---
+
+### Step 6 — Verify error handling
+
+```bash
+# No token → 403
+curl http://localhost:8080/api/people
+
+# Non-numeric page → 400
+curl "http://localhost:8080/api/people?page=abc" \
+  -H "Authorization: Bearer $TOKEN"
+
+# Page < 1 → 400
+curl "http://localhost:8080/api/people?page=0" \
+  -H "Authorization: Bearer $TOKEN"
+
+# Non-existent ID → 404
+curl "http://localhost:8080/api/people/9999" \
   -H "Authorization: Bearer $TOKEN"
 ```
 

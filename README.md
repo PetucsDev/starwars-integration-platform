@@ -48,6 +48,11 @@ The app starts on **http://localhost:8080**.
 
 ## Running tests
 
+**Option A — IntelliJ IDEA**
+
+Right-click on `src/test/java` → **Run All Tests**
+
+**Option B — Maven CLI**
 ```bash
 mvn test
 ```

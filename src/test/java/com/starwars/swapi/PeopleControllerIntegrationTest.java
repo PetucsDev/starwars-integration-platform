@@ -181,7 +181,7 @@ class PeopleControllerIntegrationTest {
                         .header("Authorization", "Bearer " + jwtToken))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.status").value(400))
-                .andExpect(jsonPath("$.message").value("Parameter 'page' must be a valid Integer"));
+                .andExpect(jsonPath("$.message").value("Parameter 'page' must be a valid int"));
     }
 
     @Test

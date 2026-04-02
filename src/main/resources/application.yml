@@ -1,0 +1,74 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: starwars-integration-platform
+
+  # H2 in-memory database for user persistence
+  datasource:
+    url: jdbc:h2:mem:starwarsdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: ""
+
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: false
+
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+  # Caffeine in-memory cache for SWAPI responses (data is essentially static)
+  cache:
+    type: caffeine
+    caffeine:
+      spec: maximumSize=500,expireAfterWrite=30m
+
+# JWT configuration
+app:
+  jwt:
+    # Base64-encoded 256-bit secret key. Override via JWT_SECRET env var in production.
+    secret: ${JWT_SECRET:c3VwZXJTZWNyZXRLZXlGb3JTdGFyV2Fyc0ludGVncmF0aW9uUGxhdGZvcm0yMDI0}
+    expiration-ms: ${JWT_EXPIRATION_MS:3600000} # 1 hour default
+
+  # Star Wars external API
+  swapi:
+    base-url: https://www.swapi.tech
+
+# Springdoc / Swagger UI
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    tags-sorter: alpha
+    operations-sorter: alpha
+  api-docs:
+    path: /v3/api-docs
+
+# Spring Boot Actuator
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: always
+  info:
+    env:
+      enabled: true
+
+info:
+  app:
+    name: Star Wars Integration Platform
+    version: 1.0.0
+    description: REST API integrating with swapi.tech
+
+logging:
+  level:
+    com.starwars: INFO
+    org.springframework.security: WARN

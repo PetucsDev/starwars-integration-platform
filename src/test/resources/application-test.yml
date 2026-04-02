@@ -1,0 +1,18 @@
+app:
+  jwt:
+    secret: dGVzdFNlY3JldEtleUZvclN0YXJXYXJzVGVzdGluZ09ubHkxMjM0NTY3ODk=
+    expiration-ms: 3600000
+  swapi:
+    # WireMock will override this in integration tests via @DynamicPropertySource
+    base-url: http://localhost:9090
+
+spring:
+  jpa:
+    show-sql: false
+  cache:
+    type: none
+
+logging:
+  level:
+    root: WARN
+    com.starwars: DEBUG

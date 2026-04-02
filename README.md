@@ -21,28 +21,28 @@ REST API built with **Java 21 + Spring Boot 3.3** that integrates with the publi
 | Tool | Version |
 |------|---------|
 | Java | 21 |
-| Maven | 3.9+ |
+| Maven | 3.9+ *(or IntelliJ IDEA which bundles Maven)* |
 
 ---
 
 ## Running locally
 
 ```bash
-# Clone the repo
 git clone <repo-url>
 cd starwars-integration-platform
+```
 
-# Run (Maven wrapper not included — use your local mvn)
+**Option A — IntelliJ IDEA (recommended)**
+1. Open the project in IntelliJ
+2. Navigate to `src/main/java/com/starwars/StarWarsApplication.java`
+3. Click the green ▶ button next to the `main` method
+
+**Option B — Maven CLI**
+```bash
 mvn spring-boot:run
 ```
 
 The app starts on **http://localhost:8080**.
-
-> If your default Java is not 21, set `JAVA_HOME` first:
-> ```bash
-> export JAVA_HOME=/path/to/java21
-> mvn spring-boot:run
-> ```
 
 ---
 
@@ -85,6 +85,8 @@ BUILD SUCCESS
 ---
 
 ### Step 1 — Start the app
+
+Run via **IntelliJ** (click ▶ on `StarWarsApplication.java`) or via **Maven CLI**:
 
 ```bash
 mvn spring-boot:run
